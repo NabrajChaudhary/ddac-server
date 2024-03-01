@@ -24,18 +24,18 @@ export const signin = async (req, res) => {
             { email: user.email, id: user.user_id },
             SECRET_KEY
           );
-          return res.status(200).json({
-            token: token,
+          res.status(200).json({
+            token,
             message: 'User logged in successfully',
           });
         } else {
-          return res.status(401).json({ message: 'Invalid credentials' });
+          res.status(401).json({ message: 'Invalid credentials' });
         }
       }
     );
   } catch (error) {
     console.error(error);
-    return res.status(500).json({ message: 'Internal server error' });
+    res.status(500).json({ message: 'Internal server error' });
   }
 };
 
@@ -53,8 +53,7 @@ export const getProfile = async (req, res) => {
         return;
       }
 
-      const data = results[0];
-      const { user_id, password, ...rest } = data;
+      const { user_id, password, ...rest } = results[0];
 
       res.status(200).json({
         data: { ...rest, id: user_id.toString() },
@@ -62,7 +61,7 @@ export const getProfile = async (req, res) => {
       });
     });
   } catch (error) {
-    console.log(error);
+    console.error(error);
     res.status(500).json({ message: 'Something went wrong' });
   }
 };
