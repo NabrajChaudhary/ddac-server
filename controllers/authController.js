@@ -28,7 +28,7 @@ export const signin = async (req, res) => {
           if (matchPassword) {
             // Passwords match, generate JWT token
             const token = jwt.sign(
-              { email: user.email, id: user.user_id },
+              { role: user.role, id: user.user_id, email: user.email },
               SECRET_KEY
             );
 
@@ -80,7 +80,7 @@ export const getProfile = async (req, res) => {
 };
 
 export const signup = async (req, res) => {
-  const { email, password, username, user_id } = req.body;
+  const { email, password, username } = req.body;
 
   try {
     // Check if the user with the provided email already exists
@@ -104,7 +104,7 @@ export const signup = async (req, res) => {
 
     // Insert the new user into the database
     const insertUserQuery =
-      'INSERT INTO users (user_id,email, password, username) VALUES (?,?, ?, ?)';
+      'INSERT INTO users (user_id,email, password, username) VALUES (?,?, ?, ?, ?)';
     const insertUserValues = [
       newUser.user_id,
       newUser.email,
@@ -117,13 +117,6 @@ export const signup = async (req, res) => {
         console.error(error);
         return res.status(500).json({ message: 'Error creating user' });
       }
-
-      // Generate a JWT token for the new user
-      const token = jwt.sign(
-        { email: newUser.email, id: results.insertId },
-        SECRET_KEY
-      );
-
       res.status(201).json({
         message: 'User has been create ! successfully',
       });

@@ -17,3 +17,8 @@ To start this Application You can use 'YARN'
  ##### Always create merge request when you push your code
  ##### Do Not work in Main Branch
 
+{
+  "email":"admin@example.com",
+  "password":"admin123",
+  "username":"Admin Account"
+}
