@@ -7,3 +7,6 @@
 To start this Application You can use 'YARN'
 
 #### yarn install
+
+###  Check the package.json before starting application
+

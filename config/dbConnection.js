@@ -8,7 +8,7 @@ const createConnection = () => {
     host: 'localhost',
     user: 'root',
     password: 'password',
-    database: 'edu_repo',
+    database: 'ddac_repo',
   });
 
   connection.connect((error) => {
