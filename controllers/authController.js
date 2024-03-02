@@ -104,7 +104,7 @@ export const signup = async (req, res) => {
 
     // Insert the new user into the database
     const insertUserQuery =
-      'INSERT INTO users (user_id,email, password, username) VALUES (?,?, ?, ?, ?)';
+      'INSERT INTO users (user_id,email, password, username) VALUES (?,?,?,?)';
     const insertUserValues = [
       newUser.user_id,
       newUser.email,
