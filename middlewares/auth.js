@@ -41,6 +41,7 @@ export const isAdmin = (req, res, next) => {
       return res.status(401).json({ message: 'Unauthorized User' });
     }
     req.userType = decodedToken.role;
+    
     if (req.userType !== 'admin') {
       return res
         .status(403)

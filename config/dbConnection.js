@@ -1,13 +1,13 @@
 // dbConnection.js
 
-import mysql from 'mysql';
+import mysql from 'mysql2';
 
 // Function to create and return a connection object
 const createConnection = () => {
   const connection = mysql.createConnection({
     host: 'localhost',
     user: 'root',
-    password: 'password',
+    password: 'manish@123',
     database: 'ddac_repo',
   });
 
