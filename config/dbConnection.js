@@ -7,7 +7,7 @@ const createConnection = () => {
   const connection = mysql.createConnection({
     host: 'localhost',
     user: 'root',
-    password: 'manish@123',
+    password: 'password',
     database: 'ddac_repo',
   });
 
