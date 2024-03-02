@@ -3,6 +3,7 @@ import cors from 'cors';
 import express from 'express';
 import createConnection from './config/dbConnection.js';
 import { authRouter } from './routes/authRoutes.js';
+import { contactUsRouter } from './routes/contactUsRoute.js';
 
 dotenv.config();
 
@@ -30,6 +31,7 @@ app.get('/', (req, res) => {
 });
 
 app.use('/auth', authRouter);
+app.use('/contact', contactUsRouter);
 
 app.listen(port, () => {
   console.log(`Server is running on http://localhost:${port}`);
