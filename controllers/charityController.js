@@ -111,3 +111,60 @@ export const deleteCharityById = async (req, res) => {
     res.status(500).json({ message: 'Something went wrong' });
   }
 };
+
+export const updateCharityById = async (req, res) => {
+  const charityId = req.params.id;
+  const { title, description, image_url, charity_amount } = req.body;
+
+  try {
+    const store_querydata = {
+      title,
+      description,
+      image_url,
+      charity_amount
+    };
+    // Check if the id exists in the table
+    const checkIdQuery = 'SELECT * FROM charity WHERE charity_id = ?';
+
+    connection.query(checkIdQuery, [charityId], (checkError, checkResult) => {
+      if (checkError) {
+        console.error(checkError);
+        return res.status(500).json({ message: 'Error checking if ID exists' });
+      }
+
+      // Check if the id was found in the table
+      if (checkResult.length === 0) {
+        return res.status(404).json({ message: 'Charity does not exists.' });
+      }
+
+      // If the id exists, proceed with the update operation
+      const updateCharityIdByQuery = 'UPDATE charity SET title = ?, description = ?, image_url = ?,charity_amount = ? WHERE charity_id = ?';
+      const updateCharityIdByValue = [
+        store_querydata.title,
+        store_querydata.description,
+        store_querydata.image_url,
+        store_querydata.charity_amount,
+        charityId
+      ];
+      connection.query(
+        updateCharityIdByQuery,
+        updateCharityIdByValue,
+        (updateError, result) => {
+          if (updateError) {
+            console.error(updateError);
+            return res
+              .status(500)
+              .json({ message: 'Error deleting charity by ID' });
+          }
+
+          res
+            .status(200)
+            .json({ message: 'Charity has been updated successfully' });
+        }
+      );
+    });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: 'Something went wrong' });
+  }
+};
