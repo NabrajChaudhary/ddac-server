@@ -131,7 +131,7 @@ export const signup = async (req, res) => {
 const checkIfUserExists = async (email) => {
   return new Promise((resolve, reject) => {
     connection.query(
-      'SELECT * FROM users WHERE email = ?',
+      `SELECT * FROM users WHERE email = ?`,
       [email],
       (error, results) => {
         if (error) {
