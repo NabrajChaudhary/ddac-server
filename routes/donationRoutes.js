@@ -10,8 +10,8 @@ import { auth, isAdmin } from '../middlewares/auth.js';
 
 export const donationRoutes = express.Router();
 
-donationRoutes.post('/add', addDonation);
-donationRoutes.get('/all', viewDonation);
-donationRoutes.get('/charity/:id', getDonationByCharityID);
-donationRoutes.get('/user/:id', getDonationByUserID);
+donationRoutes.post('/add', auth, addDonation);
+donationRoutes.get('/all', isAdmin, viewDonation);
+donationRoutes.get('/charity/:id', isAdmin, getDonationByCharityID);
+donationRoutes.get('/user/:id', auth, getDonationByUserID);
 donationRoutes.delete('/delete/:id', isAdmin, deleteDonation);
