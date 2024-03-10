@@ -79,7 +79,7 @@ export const addDonation = (req, res) => {
 
     connection.query(updateCharityQuery, updateCharityValues);
 
-    res.status(201).json({
+    res.status(200).json({
       message: 'Donation has been made successfully...',
     });
   } catch (error) {
