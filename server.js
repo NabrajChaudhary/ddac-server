@@ -6,6 +6,7 @@ import { authRouter } from './routes/authRoutes.js';
 import { contactUsRouter } from './routes/contactUsRoute.js';
 import { charityRoutes } from './routes/charityRoutes.js';
 import { donationRoutes } from './routes/donationRoutes.js';
+import { testimonialRoutes } from './routes/testimonialRoutes.js';
 
 
 
@@ -38,6 +39,7 @@ app.use('/auth', authRouter);
 app.use('/contact', contactUsRouter);
 app.use('/charity', charityRoutes);
 app.use('/donation', donationRoutes);
+app.use("/testimonial",testimonialRoutes)
 
 app.listen(port, () => {
   console.log(`Server is running on http://localhost:${port}`);
