@@ -5,10 +5,10 @@ import mysql from 'mysql2';
 // Function to create and return a connection object
 const createConnection = () => {
   const connection = mysql.createConnection({
-    host: 'localhost',
-    user: 'root',
-    password: 'Bikal@1234',
-    database: 'ddac_repo',
+    host: 'ddac-test.cp8go66mcog5.us-east-1.rds.amazonaws.com',
+    user: 'admin',
+    password: 'password',
+    database: 'ddac_app',
   });
 
   connection.connect((error) => {
