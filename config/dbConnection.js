@@ -1,14 +1,22 @@
 // dbConnection.js
 
 import mysql from 'mysql2';
+import dotenv from 'dotenv';
 
+dotenv.config();
 // Function to create and return a connection object
+
+const user = process.env.USER || '';
+const host = process.env.HOST || '';
+const password = process.env.PASSWORD || '';
+const database = process.env.DATABASE || '';
+
 const createConnection = () => {
   const connection = mysql.createConnection({
-    host: 'ddac-test.cp8go66mcog5.us-east-1.rds.amazonaws.com',
-    user: 'admin',
-    password: 'password',
-    database: 'ddac_app',
+    host: host,
+    user: user,
+    password: password,
+    database: database,
   });
 
   connection.connect((error) => {
