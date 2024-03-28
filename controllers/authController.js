@@ -26,16 +26,25 @@ export const signin = async (req, res) => {
           const matchPassword = await bcrypt.compare(password, user.password);
 
           if (matchPassword) {
-            // Passwords match, generate JWT token
-            const token = jwt.sign(
-              { role: user.role, id: user.user_id, email: user.email },
-              SECRET_KEY
-            );
+            try {
+              // Passwords match, generate JWT token
+              const token = jwt.sign(
+                {
+                  userID: user.user_id,
+                  role: user.role,
+                },
+                SECRET_KEY
+              );
 
-            res.status(200).json({
-              token,
-              message: 'User logged in successfully',
-            });
+              res.status(200).json({
+                token,
+                role: user.role,
+                message: 'User logged in successfully',
+              });
+            } catch (jwtError) {
+              console.error('JWT Error:', jwtError);
+              res.status(500).json({ message: 'Error generating JWT token' });
+            }
           } else {
             // Passwords don't match
             res.status(401).json({ message: 'Invalid credentials' });
