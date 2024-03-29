@@ -62,26 +62,30 @@ export const signin = async (req, res) => {
 };
 
 export const getProfile = async (req, res) => {
+  const userID = req.userId;
   try {
-    connection.query('SELECT * FROM users LIMIT 1', (error, results) => {
-      if (error) {
-        console.error(error);
-        res.status(500).json({ message: 'Internal server error' });
-        return;
+    connection.query(
+      'SELECT * FROM users WHERE user_id = ?',
+      [userID],
+      async (error, results) => {
+        if (error) {
+          console.error(error);
+          return res.status(500).json({ message: 'Internal server error' });
+        }
+
+        if (results.length === 0) {
+          res.status(404).json({ message: 'Profile not found' });
+          return;
+        }
+
+        const { user_id, password, ...rest } = results[0];
+
+        res.status(200).json({
+          data: { ...rest, id: user_id.toString() },
+          message: 'Data fetched successfully!',
+        });
       }
-
-      if (results.length === 0) {
-        res.status(404).json({ message: 'Profile not found' });
-        return;
-      }
-
-      const { user_id, password, ...rest } = results[0];
-
-      res.status(200).json({
-        data: { ...rest, id: user_id.toString() },
-        message: 'Data fetched successfully!',
-      });
-    });
+    );
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: 'Something went wrong' });
