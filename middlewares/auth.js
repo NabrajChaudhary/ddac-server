@@ -18,7 +18,7 @@ export const auth = (req, res, next) => {
       return res.status(401).json({ message: 'Unauthorized User' });
     }
 
-    req.userId = decodedToken.id; // Store user ID in request object for future use
+    req.userId = decodedToken.userID; // Store user ID in request object for future use
     req.userType = decodedToken.role;
     next(); // Move to the next middleware/route handler
   } catch (error) {
@@ -41,7 +41,7 @@ export const isAdmin = (req, res, next) => {
       return res.status(401).json({ message: 'Unauthorized User' });
     }
     req.userType = decodedToken.role;
-    
+
     if (req.userType !== 'admin') {
       return res
         .status(403)
