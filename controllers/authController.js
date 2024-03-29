@@ -7,6 +7,7 @@ const SECRET_KEY = 'NOTESAPI';
 
 const connection = createConnection();
 
+
 export const signin = async (req, res) => {
   const { email, password } = req.body;
 
