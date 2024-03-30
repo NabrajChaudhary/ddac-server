@@ -94,9 +94,9 @@ export const allCharity = async (req, res) => {
       }
 
       // Extracting only charity_id and title from each item in the result array
-      const data = result.map(({ charity_id, title }) => ({
-        charity_id,
-        title,
+      const data = result.map(({ charity_id: value, title: label }) => ({
+        label,
+        value,
       }));
 
       res.status(200).json({
