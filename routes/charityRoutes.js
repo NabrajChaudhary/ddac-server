@@ -1,5 +1,6 @@
 import express from 'express';
 import {
+  allCharity,
   deleteCharityById,
   getAllCharity,
   getCharityByID,
@@ -14,4 +15,5 @@ charityRoutes.post('/add', isAdmin, postCharity);
 charityRoutes.get('/getAll', getAllCharity);
 charityRoutes.delete('/delete/:id', isAdmin, deleteCharityById);
 charityRoutes.put('/update/:id', updateCharityById);
-charityRoutes.get('/:id', getCharityByID);
+charityRoutes.get('/data/:id', getCharityByID);
+charityRoutes.get('/all', allCharity);
