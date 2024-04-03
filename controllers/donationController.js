@@ -109,12 +109,6 @@ export const getDonationByCharityID = (req, res) => {
           .json({ message: 'Error fetching donations by charity ID' });
       }
 
-      if (result.length === 0) {
-        return res
-          .status(404)
-          .json({ message: 'No donations found for the charity' });
-      }
-
       res.status(200).json({
         data: result,
         message: 'Donations have been fetched successfully!',
@@ -143,12 +137,6 @@ export const getDonationByUserID = (req, res) => {
         return res
           .status(500)
           .json({ message: 'Error fetching donations by User ID' });
-      }
-
-      if (result.length === 0) {
-        return res
-          .status(404)
-          .json({ message: 'No donations found for the User ID' });
       }
 
       res.status(200).json({
