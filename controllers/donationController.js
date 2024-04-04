@@ -25,71 +25,134 @@ export const viewDonation = async (req, res) => {
 };
 
 //Add Donation
-export const addDonation = (req, res) => {
+// export const addDonation = (req, res) => {
+//   const { user_id, charity_id, donor_name, donor_message, donation_amount } =
+//     req.body;
+
+//   try {
+//     const store_donation = {
+//       donation_id: generateId(),
+//       user_id,
+//       charity_id,
+//       donor_name,
+//       donor_message,
+//       donation_amount,
+//     };
+
+//     // Check if user and charity exist
+//     const userExist = checkValidation('user', user_id);
+//     const charityExist = checkValidation('charity', charity_id);
+
+//     if (!userExist || !charityExist) {
+//       return res.status(500).json({
+//         message: 'Charity or user is not found.',
+//       });
+//     }
+
+//     // Add donation to the donation_list table
+//     const addDonationQuery = `
+//         INSERT INTO donation_list(donation_id, user_id, charity_id, donor_name, donor_message, donation_amount)
+//         VALUES (?, ?, ?, ?, ?, ?)
+//       `;
+//     const addDonationValues = [
+//       store_donation.donation_id,
+//       store_donation.user_id,
+//       store_donation.charity_id,
+//       store_donation.donor_name,
+//       store_donation.donor_message,
+//       store_donation.donation_amount,
+//     ];
+
+//     connection.query(addDonationQuery, addDonationValues);
+
+//     // Update donation_count and collected_amount in the charity table
+//     const updateCharityQuery = `
+//         UPDATE charity
+//         SET donation_count = donation_count + 1,
+//             collected_amount = collected_amount + ?
+//         WHERE charity_id = ?
+//       `;
+//     const updateCharityValues = [
+//       store_donation.donation_amount,
+//       store_donation.charity_id,
+//     ];
+
+//     connection.query(updateCharityQuery, updateCharityValues);
+
+//     res.status(200).json({
+//       message: 'Donation has been made successfully...',
+//     });
+//   } catch (error) {
+//     console.log(error);
+//     res.status(500).json({
+//       message: 'Internal Server ERROR...',
+//     });
+//   }
+// };
+
+export const addDonation = async (req, res) => {
   const { user_id, charity_id, donor_name, donor_message, donation_amount } =
     req.body;
 
   try {
-    const store_donation = {
-      donation_id: generateId(),
+    // Check if user and charity exist
+    const userExist = await checkValidation(
+      'user',
+      'user_id',
+      user_id,
+      connection
+    );
+    const charityExist = await checkValidation(
+      'charity',
+      'charity_id',
+      charity_id,
+      connection
+    );
+
+    if (!userExist || !charityExist) {
+      return res.status(404).json({
+        message: 'Charity or user not found.',
+      });
+    }
+
+    // Generate donation id
+    const donation_id = generateId();
+
+    // Add donation to the donation_list table
+    const addDonationQuery = `
+      INSERT INTO donation_list(donation_id, user_id, charity_id, donor_name, donor_message, donation_amount)
+      VALUES (?, ?, ?, ?, ?, ?)
+    `;
+    const addDonationValues = [
+      donation_id,
       user_id,
       charity_id,
       donor_name,
       donor_message,
       donation_amount,
-    };
-
-    // Check if user and charity exist
-    const userExist = checkValidation('user', user_id);
-    const charityExist = checkValidation('charity', charity_id);
-
-    if (!userExist || !charityExist) {
-      return res.status(500).json({
-        message: 'Charity or user is not found.',
-      });
-    }
-
-    // Add donation to the donation_list table
-    const addDonationQuery = `
-        INSERT INTO donation_list(donation_id, user_id, charity_id, donor_name, donor_message, donation_amount)
-        VALUES (?, ?, ?, ?, ?, ?)
-      `;
-    const addDonationValues = [
-      store_donation.donation_id,
-      store_donation.user_id,
-      store_donation.charity_id,
-      store_donation.donor_name,
-      store_donation.donor_message,
-      store_donation.donation_amount,
     ];
-
-    connection.query(addDonationQuery, addDonationValues);
+    await connection.query(addDonationQuery, addDonationValues);
 
     // Update donation_count and collected_amount in the charity table
     const updateCharityQuery = `
-        UPDATE charity
-        SET donation_count = donation_count + 1,
-            collected_amount = collected_amount + ?
-        WHERE charity_id = ?
-      `;
-    const updateCharityValues = [
-      store_donation.donation_amount,
-      store_donation.charity_id,
-    ];
-
-    connection.query(updateCharityQuery, updateCharityValues);
+      UPDATE charity
+      SET donation_count = donation_count + 1,
+          collected_amount = collected_amount + ?
+      WHERE charity_id = ?
+    `;
+    const updateCharityValues = [donation_amount, charity_id];
+    await connection.query(updateCharityQuery, updateCharityValues);
 
     res.status(200).json({
-      message: 'Donation has been made successfully...',
+      message: 'Donation has been made successfully.',
     });
   } catch (error) {
-    console.log(error);
+    console.error(error);
     res.status(500).json({
-      message: 'Internal Server ERROR...',
+      message: 'Internal Server Error.',
     });
   }
 };
-
 //View Donation by CharityID
 export const getDonationByCharityID = (req, res) => {
   try {
@@ -150,22 +213,36 @@ export const getDonationByUserID = (req, res) => {
   }
 };
 
-// export const deleteDonation = async (req, res) => {
-//   try {
-//     // Placeholder for the deleteDonation function
-//     // Implement the logic to delete a donation based on the provided donation ID
-//     const donationID = req.params.id;
-
-//     // Your delete query and logic here
-
-//     res.status(200).json({ message: 'Donation deleted successfully!' });
-//   } catch (error) {
-//     console.error(error);
-//     res.status(500).json({ message: 'Internal Server Error' });
-//   }
-// };
-
-export const deleteDonation = async (req, res) => {
+export const deleteDonation = (req, res) => {
+  const id = req.params.id;
   try {
+    const checkIdQuery = 'SELECT * FROM donation_list WHERE donation_id = ?';
+
+    connection.query(checkIdQuery, [id], (checkError, checkResult) => {
+      if (checkError) {
+        console.error(checkError);
+        return res.status(500).json({ message: 'Error checking if ID exists' });
+      }
+
+      // Check if the id was found in the table
+      if (checkResult.length === 0) {
+        return res.status(404).json({ message: 'Data not found' });
+      }
+
+      // If the id exists, proceed with the DELETE operation
+      const deleteDonationByIdQuery =
+        'DELETE FROM donation_list WHERE donation_id = ?';
+
+      connection.query(deleteDonationByIdQuery, [id], (deleteError, result) => {
+        if (deleteError) {
+          console.error(deleteError);
+          return res
+            .status(500)
+            .json({ message: 'Error deleting contact us by ID' });
+        }
+
+        res.status(200).json({ message: 'Donation deleted successfully' });
+      });
+    });
   } catch (error) {}
 };
