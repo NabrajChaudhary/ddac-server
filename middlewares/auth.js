@@ -59,7 +59,8 @@ const SECRET_KEY = 'NOTESAPI'; // Replace with your actual secret key
 
 export const auth = (req, res, next) => {
   try {
-    const token = req.headers.authorization;
+    const token = req.headers.authorization && req.headers.authorization;
+    console.log('🚀 ~ auth ~ token:', token);
 
     if (!token || !token.startsWith('Bearer ')) {
       return res.status(401).json({ message: 'Unauthorized User' });
@@ -83,7 +84,7 @@ export const auth = (req, res, next) => {
 
 export const isAdmin = (req, res, next) => {
   try {
-    const token = req.headers.authorization;
+    const token = req.headers.authorization && req.headers.authorization;
 
     if (!token || !token.startsWith('Bearer ')) {
       return res.status(401).json({ message: 'Unauthorized User' });
