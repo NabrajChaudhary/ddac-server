@@ -24,97 +24,12 @@ export const viewDonation = async (req, res) => {
   }
 };
 
-//Add Donation
-// export const addDonation = (req, res) => {
-//   const { user_id, charity_id, donor_name, donor_message, donation_amount } =
-//     req.body;
-
-//   try {
-//     const store_donation = {
-//       donation_id: generateId(),
-//       user_id,
-//       charity_id,
-//       donor_name,
-//       donor_message,
-//       donation_amount,
-//     };
-
-//     // Check if user and charity exist
-//     const userExist = checkValidation('user', user_id);
-//     const charityExist = checkValidation('charity', charity_id);
-
-//     if (!userExist || !charityExist) {
-//       return res.status(500).json({
-//         message: 'Charity or user is not found.',
-//       });
-//     }
-
-//     // Add donation to the donation_list table
-//     const addDonationQuery = `
-//         INSERT INTO donation_list(donation_id, user_id, charity_id, donor_name, donor_message, donation_amount)
-//         VALUES (?, ?, ?, ?, ?, ?)
-//       `;
-//     const addDonationValues = [
-//       store_donation.donation_id,
-//       store_donation.user_id,
-//       store_donation.charity_id,
-//       store_donation.donor_name,
-//       store_donation.donor_message,
-//       store_donation.donation_amount,
-//     ];
-
-//     connection.query(addDonationQuery, addDonationValues);
-
-//     // Update donation_count and collected_amount in the charity table
-//     const updateCharityQuery = `
-//         UPDATE charity
-//         SET donation_count = donation_count + 1,
-//             collected_amount = collected_amount + ?
-//         WHERE charity_id = ?
-//       `;
-//     const updateCharityValues = [
-//       store_donation.donation_amount,
-//       store_donation.charity_id,
-//     ];
-
-//     connection.query(updateCharityQuery, updateCharityValues);
-
-//     res.status(200).json({
-//       message: 'Donation has been made successfully...',
-//     });
-//   } catch (error) {
-//     console.log(error);
-//     res.status(500).json({
-//       message: 'Internal Server ERROR...',
-//     });
-//   }
-// };
 
 export const addDonation = async (req, res) => {
   const { user_id, charity_id, donor_name, donor_message, donation_amount } =
     req.body;
 
   try {
-    // Check if user and charity exist
-    const userExist = await checkValidation(
-      'user',
-      'user_id',
-      user_id,
-      connection
-    );
-    const charityExist = await checkValidation(
-      'charity',
-      'charity_id',
-      charity_id,
-      connection
-    );
-
-    if (!userExist || !charityExist) {
-      return res.status(404).json({
-        message: 'Charity or user not found.',
-      });
-    }
-
     // Generate donation id
     const donation_id = generateId();
 
@@ -131,7 +46,7 @@ export const addDonation = async (req, res) => {
       donor_message,
       donation_amount,
     ];
-    await connection.query(addDonationQuery, addDonationValues);
+    connection.query(addDonationQuery, addDonationValues);
 
     // Update donation_count and collected_amount in the charity table
     const updateCharityQuery = `
@@ -141,7 +56,7 @@ export const addDonation = async (req, res) => {
       WHERE charity_id = ?
     `;
     const updateCharityValues = [donation_amount, charity_id];
-    await connection.query(updateCharityQuery, updateCharityValues);
+    connection.query(updateCharityQuery, updateCharityValues);
 
     res.status(200).json({
       message: 'Donation has been made successfully.',
@@ -153,6 +68,7 @@ export const addDonation = async (req, res) => {
     });
   }
 };
+
 //View Donation by CharityID
 export const getDonationByCharityID = (req, res) => {
   try {

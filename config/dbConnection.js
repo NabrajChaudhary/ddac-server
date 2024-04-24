@@ -16,8 +16,8 @@ const database = process.env.DATABASE || '';
 // const password = '#*5NsYL[P~[rNkWKw$W7~T?$jjhA';
 // const database = 'ddac_app';
 
-const createConnection = async () => {
-  const connection = await mysql.createConnection({
+const createConnection =  () => {
+  const connection =  mysql.createConnection({
     host: host,
     user: user,
     password: password,
