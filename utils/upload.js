@@ -8,12 +8,15 @@ import path from 'path'; // Import path for path operations\
 //     // cb(null, path.join('test', {}));
 //   },
 //   filename: (req, file, cb) => {
-//     cb(null, Date.now() + '-' + file.originalname);
+//     cb(null, Date.now() + '-' + file.originalname);y
 //   },
 // });
 
-const storage = multer.diskStorage({});
-
-const upload = multer({ storage });
+const upload = multer({
+  storage: multer.memoryStorage(),
+  limits: {
+    fileSize: 5 * 1024 * 1024, // limit file size to 5MB
+  },
+});
 
 export default upload;
