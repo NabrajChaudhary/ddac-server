@@ -8,6 +8,22 @@ import { charityRoutes } from './routes/charityRoutes.js';
 import { donationRoutes } from './routes/donationRoutes.js';
 import { testimonialRoutes } from './routes/testimonialRoutes.js';
 import { PORT } from './constant/constant.js';
+// import AWS from 'aws-sdk';
+
+// // Configure AWS SDK with region and credentials if needed
+// AWS.config.update({
+//   accessKeyId: 'ASIA6GBMA2LG4ZCDV2BJ',
+//   secretAccessKey: 'uiun8fYg2QsrykdEfeHcE2wX30tmQ2F/4t3lYSKw',
+//   region: 'us-east-1',
+// });
+// const s3 = new AWS.S3();
+
+// s3.putObject({});
+
+// // Define parameters
+// const params = {
+//   Bucket: 'charity-app-s3',
+// };
 
 dotenv.config();
 
@@ -16,6 +32,14 @@ app.use(express.json());
 app.use(cors());
 
 const connection = createConnection();
+// // List objects in the bucket
+// s3.listObjects(params, (err, data) => {
+//   if (err) {
+//     console.error('Error listing objects:', err);
+//   } else {
+//     console.log('Objects in bucket:', data.Contents);
+//   }
+// });
 
 app.get('/', (req, res) => {
   const sql = 'SELECT * FROM notes';

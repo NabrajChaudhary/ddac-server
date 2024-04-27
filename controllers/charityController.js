@@ -3,6 +3,7 @@ import { generateId } from '../utils/globalFunction.js';
 import urlUpload from '../utils/cloudinarySetup.js';
 import upload from '../utils/upload.js';
 import multer from 'multer';
+import uploadToS3 from '../utils/uploadTos3.js';
 
 const connection = createConnection();
 
@@ -18,13 +19,15 @@ export const postCharity = async (req, res) => {
       const { title, description, charity_amount } = req.body;
       const imagePath = req.file ? req.file.path : null;
 
-      // Upload the image to the cloud and get the secure URL
-      const uploadResponse = await urlUpload(imagePath);
+      // Upload the image to S3 and get the secure URL
+      const uploadResponse = await uploadToS3(imagePath);
+
+      // Construct new charity data with the uploaded image URL
       const newCharityData = {
         charity_id: generateId(),
         title,
         description,
-        image_url: uploadResponse.secure_url,
+        image_url: uploadResponse.Location, // Assuming Location contains the URL
         charity_amount,
         donation_count: 0,
         collected_amount: 0,
@@ -61,6 +64,62 @@ export const postCharity = async (req, res) => {
     res.status(500).json({ message: 'Internal server error' });
   }
 };
+
+// export const postCharity = async (req, res) => {
+//   try {
+//     upload.single('image_url')(req, res, async (err) => {
+//       if (err instanceof multer.MulterError) {
+//         return res.status(400).json({ message: 'File upload error' });
+//       } else if (err) {
+//         return res.status(500).json({ message: 'Internal server error' });
+//       }
+
+//       const { title, description, charity_amount } = req.body;
+//       const imagePath = req.file ? req.file.path : null;
+
+//       // Upload the image to the cloud and get the secure URL
+//       const uploadResponse = await urlUpload(imagePath);
+//       const newCharityData = {
+//         charity_id: generateId(),
+//         title,
+//         description,
+//         image_url: uploadResponse.secure_url,
+//         charity_amount,
+//         donation_count: 0,
+//         collected_amount: 0,
+//       };
+
+//       // Insert the new charity into the database
+//       const insertCharityQuery =
+//         'INSERT INTO charity (charity_id, title, description, image_url, charity_amount) VALUES (?, ?, ?, ?, ?)';
+//       const insertCharityValues = [
+//         newCharityData.charity_id,
+//         newCharityData.title,
+//         newCharityData.description,
+//         newCharityData.image_url,
+//         newCharityData.charity_amount,
+//       ];
+
+//       connection.query(
+//         insertCharityQuery,
+//         insertCharityValues,
+//         (error, results) => {
+//           if (error) {
+//             console.error(error);
+//             return res.status(500).json({ message: 'Error creating Charity.' });
+//           }
+
+//           res.status(201).json({
+//             message: 'Charity has been created successfully.',
+//           });
+//         }
+//       );
+//     });
+//   } catch (error) {
+//     console.error(error);
+//     res.status(500).json({ message: 'Internal server error' });
+//   }
+// };
 
 // get all charity
 export const getAllCharity = async (req, res) => {
