@@ -27,10 +27,34 @@ import { PORT } from './constant/constant.js';
 
 dotenv.config();
 
+/*
+AWS.config.update({ region: 'US East (N. Virginia) us-east-1' });
+const s3 = new AWS.S3();
+
+s3.putObject({});
+
+// Define parameters
+const params = {
+  Bucket: 'charity-app-s3',
+};
+
+*/
+
 const app = express();
 app.use(express.json());
 app.use(cors());
 
+/*
+// List objects in the bucket
+s3.listObjects(params, (err, data) => {
+  if (err) {
+    console.error('Error listing objects:', err);
+  } else {
+    console.log('Objects in bucket:', data.Contents);
+  }
+});
+
+*/
 const connection = createConnection();
 // // List objects in the bucket
 // s3.listObjects(params, (err, data) => {
@@ -42,18 +66,9 @@ const connection = createConnection();
 // });
 
 app.get('/', (req, res) => {
-  const sql = 'SELECT * FROM notes';
-
-  // Use the connection.query method to execute the SQL query
-  connection.query(sql, (err, result) => {
-    if (err) {
-      console.error('Database error:', err);
-      return res.status(500).json({ error: 'Internal Server Error' });
-    }
-
-    console.log('Result:', result);
-    res.json(result);
-  });
+  res.send(
+    'Charity App is running available routes are auth, charity, donation, testimonials'
+  );
 });
 
 app.use('/auth', authRouter);
