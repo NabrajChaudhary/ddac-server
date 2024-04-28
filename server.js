@@ -8,6 +8,8 @@ import { charityRoutes } from './routes/charityRoutes.js';
 import { donationRoutes } from './routes/donationRoutes.js';
 import { testimonialRoutes } from './routes/testimonialRoutes.js';
 import { MINU, PORT } from './constant/constant.js';
+import sendMessageToSNS from './utils/notificationsns.js';
+import sendEmail from './utils/sendEmail.js';
 
 dotenv.config();
 
@@ -28,7 +30,7 @@ app.use('/contact', contactUsRouter);
 app.use('/charity', charityRoutes);
 app.use('/donation', donationRoutes);
 app.use('/testimonial', testimonialRoutes);
-
+app.get('/send-email', sendEmail);
 app.listen(PORT, () => {
   console.log(`Server is running on http://localhost:${PORT}`);
   // connection();
