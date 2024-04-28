@@ -11,10 +11,10 @@ dotenv.config();
 // const password = process.env.PASSWORD || '';
 // const database = process.env.DATABASE || '';
 
-const user = 'root';
-const host = 'ddac-database.cluster-cp8go66mcog5.us-east-1.rds.amazonaws.com';
-const password = 'BK>Yu:cBjk9L9%B$0h9vOr9*W~}>';
-const database = 'ddac_app';
+const user = 'admin';
+const host = 'feedtheneed-db.c34mocu6opm5.us-east-1.rds.amazonaws.com';
+const password = 'Feed1234';
+const database = 'db_feedTheNeed';
 
 const createConnection = () => {
   const connection = mysql.createConnection({
