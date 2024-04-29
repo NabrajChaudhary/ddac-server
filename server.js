@@ -7,8 +7,8 @@ import { contactUsRouter } from './routes/contactUsRoute.js';
 import { charityRoutes } from './routes/charityRoutes.js';
 import { donationRoutes } from './routes/donationRoutes.js';
 import { testimonialRoutes } from './routes/testimonialRoutes.js';
-import { MINU, PORT } from './constant/constant.js';
-import sendMessageToSNS from './utils/notificationsns.js';
+import { PORT } from './constant/constant.js';
+
 import sendEmail from './utils/sendEmail.js';
 
 dotenv.config();

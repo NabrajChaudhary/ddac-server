@@ -4,7 +4,7 @@ import {
   AWS_SENDER_MAIL,
   AWS_SMTP_PASSWORD,
   AWS_SMTP_USERNAME,
-} from '../constant/constant';
+} from '../constant/constant.js';
 
 const sendEmail = (req, res) => {
   const RECIPIENT_EMAIL_ADDRESS = 'biplopk@gmail.com';
