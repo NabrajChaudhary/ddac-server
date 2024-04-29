@@ -24,65 +24,48 @@ export const viewDonation = async (req, res) => {
   }
 };
 
-export const addDonation = async (req, res) => {
+export const addDonation = (req, res) => {
   const { user_id, charity_id, donor_name, donor_message, donation_amount } =
     req.body;
-
+  //try-catch
   try {
-    // Generate donation id
-    const donation_id = generateId();
-
-    // Add donation to the donation_list table
-    const addDonationQuery = `
-      INSERT INTO donation_list(donation_id, user_id, charity_id, donor_name, donor_message, donation_amount)
-      VALUES (?, ?, ?, ?, ?, ?)
-    `;
-    const addDonationValues = [
-      donation_id,
+    // const create to store the data after the query
+    const dataStoreDonations = {
+      donation_id: generateId(), //generate 16 digit random id
       user_id,
       charity_id,
       donor_name,
       donor_message,
       donation_amount,
+    };
+    console.log('🚀 ~ addDonation ~ dataStoreDonations:', dataStoreDonations);
+    //Insert query to add new testimonials in database
+    const addDonationQuery =
+      'INSERT INTO donation_list(donation_id, user_id, charity_id, donor_name, donor_message, donation_amount) VALUES (?, ?, ?, ?, ?, ?)';
+    //storing the data
+    const addDonationsValue = [
+      dataStoreDonations.donation_id,
+      dataStoreDonations.user_id,
+      dataStoreDonations.charity_id,
+      dataStoreDonations.donor_message,
+      dataStoreDonations.donor_message,
+      dataStoreDonations.donation_amount,
     ];
-
-    connection.query(addDonationQuery, addDonationValues, (error, result) => {
+    connection.query(addDonationQuery, addDonationsValue, (error, results) => {
       if (error) {
-        console.error(error);
-        return res.status(500).json({
-          message: 'Error adding your donation.',
+        console.log(error);
+        res.status(500).json({
+          message: 'Error adding your Donations...',
         });
       }
-
-      // Update charity table
-      const updateCharityQuery = `
-        UPDATE charity
-        SET donation_count = donation_count + 1,
-            collected_amount = collected_amount + ?
-        WHERE charity_id = ?
-      `;
-      const updateCharityValues = [donation_amount, charity_id];
-      connection.query(
-        updateCharityQuery,
-        updateCharityValues,
-        (error, result) => {
-          if (error) {
-            console.error(error);
-            return res.status(500).json({
-              message: 'Error updating charity.',
-            });
-          }
-
-          res.status(200).json({
-            message: 'Donation has been made successfully.',
-          });
-        }
-      );
+      res.status(200).json({
+        message: 'Donation Added Successfully...',
+      });
     });
   } catch (error) {
-    console.error(error);
+    console.log(error);
     res.status(500).json({
-      message: 'Internal Server Error.',
+      message: 'Server Error.....',
     });
   }
 };
